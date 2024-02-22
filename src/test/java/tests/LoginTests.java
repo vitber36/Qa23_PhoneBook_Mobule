@@ -14,6 +14,7 @@ public class LoginTests extends AppiumConfig {
     public void postConditions(){
         new ContactListScreen(driver).logout();
     }
+
     @Test
     public void loginSuccess(){
 //        boolean result=new SplashScreen(driver)
@@ -51,6 +52,18 @@ public class LoginTests extends AppiumConfig {
                 .fillLoginRegistrationForm(Auth.builder()
                         .email("vitber36gmail.com")
                         .password("1978Vit@lik")
+                        .build())
+                .submitLoginNegative()
+                .isErrorMessageHasText("Login or Password incorrect");
+
+    }
+
+    @Test
+    public void loginWrongPassword(){
+        new AuthenticationScreen(driver)
+                .fillLoginRegistrationForm(Auth.builder()
+                        .email("vitber36@gmail.com")
+                        .password("1978")
                         .build())
                 .submitLoginNegative()
                 .isErrorMessageHasText("Login or Password incorrect");

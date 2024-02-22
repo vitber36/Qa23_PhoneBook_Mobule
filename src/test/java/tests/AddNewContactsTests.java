@@ -20,7 +20,8 @@ public class AddNewContactsTests extends AppiumConfig {
                        .email("vitber06@mail.ru")
                        .password("1978Vit@lik")
                        .build())
-               .submitLogin();
+               .submitLogin()
+               .isActivityTitleDisplayed("Contact list");
     }
 
     @Test
@@ -42,7 +43,51 @@ public class AddNewContactsTests extends AppiumConfig {
 
     }
     public void createNewContactSuccessReq(){
+        int i=new Random().nextInt(1000)+1000;
+        Contact contact= Contact.builder()
+                .name("Simon")
+                .lastName("Wow"+i)
+                .email("wow"+i+"@gmail.com")
+                .phone("12345678"+i)
+                .address("wow")
+                .build();
+        new ContactListScreen(driver)
+                .openContactForm()
+                .fillContactForm(contact)
+                .submitContactForm()
+                .isContactAddedByName(contact.getName(),contact.getLastName());
+    }
 
+    @Test
+    public void createContactWithEmptyName(){
+        Contact contact= Contact.builder()
+                .lastName("Wow")
+                .email("wow@gmail.com")
+                .phone("1234567890")
+                .address("wow")
+                .description("Empty name")
+                .build();
+        new ContactListScreen(driver)
+                .openContactForm()
+                .fillContactForm(contact)
+                .submitContactFormNegative()
+                .isErrorContainsText("{name=must not be blank}");
+    }
+
+    @Test
+    public void createContactWithEmptyLastName(){
+        Contact contact= Contact.builder()
+                .name("wow")
+                .email("wow@gmail.com")
+                .phone("1234567890")
+                .address("wow")
+                .description("Empty name")
+                .build();
+        new ContactListScreen(driver)
+                .openContactForm()
+                .fillContactForm(contact)
+                .submitContactFormNegative()
+                .isErrorContainsText("{Last name=must not be blank}");
     }
     @AfterClass
     public void postCondition(){
